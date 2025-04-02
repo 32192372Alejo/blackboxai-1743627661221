@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Entrevistas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1C1C1E;
+            color: white;
+        }
+        .interview-card {
+            background-color: #2C2C2E;
+            transition: all 0.3s ease;
+        }
+        .interview-card:hover {
+            transform: translateX(4px);
+            background-color: #3C3C3E;
+        }
+        .difficulty-option {
+            background-color: #2C2C2E;
+            border: 1px solid #48484A;
+            transition: all 0.3s ease;
+        }
+        .difficulty-option.selected {
+            background-color: #007AFF;
+            border-color: #007AFF;
+        }
+    </style>
+</head>
+<body class="min-h-screen p-4">
+    <div class="max-w-md mx-auto">
+        <!-- Header -->
+        <div class="flex items-center mb-8">
+            <button class="text-white p-2" onclick="history.back()">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+            <h1 class="text-2xl font-bold text-center flex-grow">Entrevistas</h1>
+        </div>
+
+        <!-- Interview Type Selection -->
+        <h2 class="text-2xl font-bold mb-6">Seleccione el tipo de entrevista que desea realizar:</h2>
+
+        <!-- Interview Types -->
+        <div class="space-y-4 mb-8">
+            <div class="interview-card rounded-xl p-4 cursor-pointer" onclick="selectInterviewType('technical')">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h3 class="text-lg font-semibold">Práctica técnica</h3>
+                        <p class="text-gray-400">Preguntas sobre código, diseño y arquitectura.</p>
+                    </div>
+                    <i class="fas fa-chevron-right text-gray-400"></i>
+                </div>
+            </div>
+
+            <div class="interview-card rounded-xl p-4 cursor-pointer" onclick="selectInterviewType('sales')">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h3 class="text-lg font-semibold">Ventas</h3>
+                        <p class="text-gray-400">Preguntas de ventas y escenarios de rol.</p>
+                    </div>
+                    <i class="fas fa-chevron-right text-gray-400"></i>
+                </div>
+            </div>
+
+            <div class="interview-card rounded-xl p-4 cursor-pointer" onclick="selectInterviewType('product')">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h3 class="text-lg font-semibold">Gerente de producto</h3>
+                        <p class="text-gray-400">Preguntas sobre productos y estrategia.</p>
+                    </div>
+                    <i class="fas fa-chevron-right text-gray-400"></i>
+                </div>
+            </div>
+
+            <div class="interview-card rounded-xl p-4 cursor-pointer" onclick="selectInterviewType('software')">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h3 class="text-lg font-semibold">Ingeniero de software</h3>
+                        <p class="text-gray-400">Preguntas sobre codificación y sistemas.</p>
+                    </div>
+                    <i class="fas fa-chevron-right text-gray-400"></i>
+                </div>
+            </div>
+
+            <div class="interview-card rounded-xl p-4 cursor-pointer" onclick="selectInterviewType('design')">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h3 class="text-lg font-semibold">Diseñador de productos</h3>
+                        <p class="text-gray-400">Preguntas sobre UX, UI y diseño.</p>
+                    </div>
+                    <i class="fas fa-chevron-right text-gray-400"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Difficulty Level -->
+        <h2 class="text-2xl font-bold mb-6">Nivel de dificultad</h2>
+        <div class="space-y-4 mb-8">
+            <div class="difficulty-option rounded-xl p-4 cursor-pointer flex items-center" onclick="selectDifficulty('easy')">
+                <div class="w-6 h-6 border-2 border-gray-500 rounded-full mr-4"></div>
+                <span class="text-lg">Fácil</span>
+            </div>
+            <div class="difficulty-option rounded-xl p-4 cursor-pointer flex items-center" onclick="selectDifficulty('normal')">
+                <div class="w-6 h-6 border-2 border-gray-500 rounded-full mr-4"></div>
+                <span class="text-lg">Normal</span>
+            </div>
+            <div class="difficulty-option rounded-xl p-4 cursor-pointer flex items-center" onclick="selectDifficulty('hard')">
+                <div class="w-6 h-6 border-2 border-gray-500 rounded-full mr-4"></div>
+                <span class="text-lg">Difícil</span>
+            </div>
+        </div>
+
+        <!-- Start Button -->
+        <button id="startButton" 
+                class="w-full bg-blue-500 text-white py-4 rounded-xl text-lg font-semibold mb-4 opacity-50 cursor-not-allowed"
+                onclick="startSimulation()" 
+                disabled>
+            Iniciar simulación
+        </button>
+
+        <!-- FAQ Link -->
+        <a href="#" class="text-blue-500 text-center block">Ver preguntas frecuentes</a>
+    </div>
+
+    <script>
+        let selectedType = null;
+        let selectedDifficulty = null;
+
+        function selectInterviewType(type) {
+            selectedType = type;
+            document.querySelectorAll('.interview-card').forEach(card => {
+                card.style.borderColor = 'transparent';
+            });
+            event.currentTarget.style.borderColor = '#007AFF';
+            updateStartButton();
+        }
+
+        function selectDifficulty(difficulty) {
+            selectedDifficulty = difficulty;
+            document.querySelectorAll('.difficulty-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+            updateStartButton();
+        }
+
+        function updateStartButton() {
+            const startButton = document.getElementById('startButton');
+            if (selectedType && selectedDifficulty) {
+                startButton.classList.remove('opacity-50', 'cursor-not-allowed');
+                startButton.classList.add('hover:bg-blue-600');
+                startButton.disabled = false;
+            } else {
+                startButton.classList.add('opacity-50', 'cursor-not-allowed');
+                startButton.classList.remove('hover:bg-blue-600');
+                startButton.disabled = true;
+            }
+        }
+
+        function startSimulation() {
+            if (selectedType && selectedDifficulty) {
+                alert(`Iniciando simulación:\nTipo: ${selectedType}\nDificultad: ${selectedDifficulty}`);
+                // Here you would normally navigate to the simulation page
+            }
+        }
+    </script>
+</body>
+</html>
